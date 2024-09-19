@@ -59,3 +59,9 @@ The **Collision Creator** addon for Blender allows you to quickly create collisi
 ## License
 
 MIT License
+
+
+## Other Plugins
+
+* https://github.com/hannesdelbeke/collision-creator-addon
+* https://github.com/CydoniaValley/ue_collider_tool
