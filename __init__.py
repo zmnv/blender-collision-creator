@@ -7,7 +7,7 @@ bl_info = {
     "name": "Collision Creator",
     "description": "Create collision blocks and convex hulls based on selected area.",
     "author": "@zmnv",
-    "version": (1, 0, 0),
+    "version": (1, 0, 2),
     "blender": (3, 0, 0),
     "location": "View3D > Tool Shelf > Collision Creator",
     "category": "Object",
@@ -138,13 +138,22 @@ def move_origin_to_geometry_center(block):
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
 
 def create_convex_hull(selected_verts):
-    """Create a convex hull around the selected vertices."""
+    """Create a convex hull around the selected vertices, removing isolated vertices."""
     bm = bmesh.new()
+    
+    # Add vertices from the selected verts
     for v in selected_verts:
         bm.verts.new(v)
+    
     bm.verts.ensure_lookup_table()
+    
+    # Create convex hull
     bmesh.ops.convex_hull(bm, input=bm.verts)
     
+    # Remove isolated vertices (those not part of any edge)
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_edges], context='VERTS')
+    
+    # Create the mesh for the convex hull
     mesh = bpy.data.meshes.new("Convex_Hull")
     bm.to_mesh(mesh)
     bm.free()
@@ -152,6 +161,7 @@ def create_convex_hull(selected_verts):
     obj = bpy.data.objects.new("Convex_Hull", mesh)
     bpy.context.collection.objects.link(obj)
     return obj
+
 
 def compute_pca_orientation(vertices):
     """Compute the PCA to find the orientation of the selected vertices."""
@@ -294,7 +304,7 @@ class VIEW3D_PT_collision_block_panel(bpy.types.Panel):
         else:
             layout.prop(props, "custom_name", text="Name")
         
-        layout.prop(props, "method", text="Method")
+        layout.prop(props, "method", text="Method", expand=True)
         layout.prop(props, "offset", text="Offset")
         layout.prop(props, "rotation", text="Rotation")
         layout.prop(props, "auto_focus", text="Select created block automatically")
