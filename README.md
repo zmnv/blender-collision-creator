@@ -20,7 +20,7 @@ The **Collision Creator** addon for Blender allows you to quickly create collisi
 
 ## Installation
 
-1. [Download the addon](#) as a `.zip` file.
+1. [Download the addon](https://github.com/zmnv/blender-collision-creator/releases/download/1.0.2/collision_creator_1.0.2.zip) as a `.zip` file.
 2. In Blender, go to `Edit > Preferences > Add-ons` and click `Install`.
 3. Select the downloaded `.zip` file and enable the addon.
 
